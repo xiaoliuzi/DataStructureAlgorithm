@@ -23,7 +23,7 @@ protected:
 	void bubbleSort(Rank lo, Rank hi);
 	Rank max(Rank lo, Rank hi);
 	void selectionSort(Rank lo, Rank hi);
-	void merge(Rank lo, Rank hi);
+	void merge(Rank lo, Rank mi, Rank hi);
 	void mergeSort(Rank lo, Rank hi);
 	Rank partition(Rank lo, Rank hi);
 	void quickSort(Rank lo, Rank hi);
@@ -269,6 +269,61 @@ static Rank binSearch(T* A, const T& e, Rank lo, Rank hi) {
 	return -1;
 }
 
+template <typename T> 
+void DSAVector<T>::sort(Rank lo, Rank hi) {
+	switch (rand() % 5) {
+	case 1: bubbleSort(lo, hi); break;
+	case 2: selectionSort(lo, hi); break;
+	case 3: mergeSort(lo, hi); break;
+	case 4: heapSort(lo, hi); break;
+	default: quickSort(lo, hi); break;
+	}
+}
+
+template <typename T>
+void DSAVector<T>::bubbleSort(Rank lo, Rank hi) {
+	while (!bubble(lo, hi--))
+		;
+}
+
+template <typename T>
+bool DSAVector<T>::bubble(Rank lo, Rank hi) {
+	bool sorted = true;
+	while (++lo < hi) {
+		if (_elem[lo - 1] > _elem[lo]) {
+			sorted = false;
+			swap(_elem[lo - 1], _elem[lo]);
+		}
+	}
+	return sorted;
+}
+
+template <typename T>
+void DSAVector<T>::mergeSort(Rank lo, Rank hi) {
+	if (hi - lo < 2) return;
+	int mi = (lo + hi) << 1;
+	mergeSort(lo, mi);
+	mergeSort(mi, hi);
+	merge(lo, mi, hi);
+}
+
+template <typename T>
+void DSAVector<T>::merge(Rank lo, Rank mi, Rank hi) {
+	T* A = _elem + lo;
+	int lb = mi - lo;
+	T* B = new T[lb];
+	for (Rank i = 0; i < lb; B[i] = A[i++])
+		;
+	int lc = hi - mi;
+	T* C = _elem + mi;
+	for (Rank i = 0, j = 0, k = 0, ; (j < lb) || (k < lc);) {
+		if ((j < lb) && (!(k < lc) || (B[j] <= C[k])))
+			A[i++] = B[j++];
+		if ((k < lc) && (!(j < lb) || (C[k] < B[j])))
+			A[i++] = C[k++];
+	}
+	delete[] B;
+}
 
 
 #endif
