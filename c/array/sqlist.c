@@ -31,9 +31,10 @@ int Init(SqList *L) {
 int SqListInsert(SqList *L, int i, int e) {
     if(L==NULL || i<0) return ERROR;
     if(i > L->listsize) return ERROR;
-    if(i >= L->length) {
-        L->elem[i] = e;
-        L->length++;
+    if(i > L->length) {
+        //L->elem[i] = e;
+        //L->length++;
+        return ERROR;
     }
     int n = L->length-1;
     for(;n>=i; --n)
